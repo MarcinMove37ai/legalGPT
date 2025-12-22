@@ -103,13 +103,13 @@ const getMenuItems = (lang: 'pl', stats?: DecisionStats): MenuItem[] => [
   },
   {
     IconComponent: EyeOff, // Przekreślone oko
-    label: 'Anonimizacja',
+    label: 'Anonimizacja dokumentów',
     path: '/dashboard/ocr',
     disabled: true // Zablokowane
   },
   {
     IconComponent: Scale, // Waga
-    label: 'Baza orzeczeń',
+    label: 'Baza orzeczeń sądowych',
     path: '/dashboard/judgments',
     disabled: true // Zablokowane
   },
