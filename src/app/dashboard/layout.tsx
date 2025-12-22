@@ -457,7 +457,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
             className="ml-0 cursor-pointer group"
           >
             <div className="flex items-center">
-              <div className="h-20 w-auto bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center px-3 py-2 transition-all duration-200 group-hover:shadow-xl group-hover:scale-105">
+              <div className="h-16 w-auto bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center px-3 py-2 transition-all duration-200 group-hover:shadow-xl group-hover:scale-105">
                 <img src="/logo.webp" alt="Logo" className="h-full w-auto object-contain" />
               </div>
             </div>
@@ -471,7 +471,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
         {/* Logo na mobile - po prawej, NIE klikalny */}
         {isMobile && isScreenSizeDetected && (
           <div className="flex items-center">
-            <div className="h-20 w-auto bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center px-3 py-2">
+            <div className="h-14 w-auto bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center px-3 py-2">
               <img src="/logo.webp" alt="Logo" className="h-full w-auto object-contain" />
             </div>
           </div>
@@ -729,7 +729,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             >
               <Header currentLang={currentLang} langReady={langReady} />
 
-              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-auto bg-gray-100 relative">
+              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-y-auto no-scrollbar bg-gray-100 relative">
                 {isNavigating && (
                   <div className="absolute inset-0 z-30 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-xl">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
@@ -737,24 +737,28 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 )}
 
                 {!isFullWidthPage && !disableMenu && (
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-2 transition-all duration-300">
-                    <div className="flex flex-row items-center w-full md:w-auto gap-3">
-                      <div className="bg-white px-2 py-1.5 min-[360px]:px-2.5 sm:px-3 md:px-5 md:py-3 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-                        <h2 className="text-base md:text-xl font-semibold text-gray-700 whitespace-nowrap">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-2 pt-2 px-1 transition-all duration-300">
+
+                    {/* LEWA STRONA: Minimalistyczna etykieta */}
+                    <div className="flex items-center">
+                        <h2 className="text-xl font-semibold text-gray-500 tracking-tight leading-none">
                           {getCurrentPageLabel(pathname, currentLang)}
                         </h2>
-                      </div>
                     </div>
 
-                    <div className="hidden md:flex w-full justify-end items-center mt-2:mt-0">
+                    {/* PRAWA STRONA: Elegancka data */}
+                    <div className="hidden md:flex items-center">
                       {isClient && (
-                        <div className="bg-white px-5 py-3 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-                          <span className="text-sm font-medium text-gray-600">
+                        <div className="flex items-center gap-3">
+                          {/* Opcjonalna pionowa kreska separatora */}
+                          <div className="h-8 w-px bg-gray-200 mx-2"></div>
+
+                          <span className="text-sm font-medium text-gray-500 capitalize tracking-wide">
                             {new Date().toLocaleDateString('pl-PL', {
                               weekday: 'long',
-                              year: 'numeric',
+                              day: 'numeric',
                               month: 'long',
-                              day: 'numeric'
+                              year: 'numeric'
                             })}
                           </span>
                         </div>

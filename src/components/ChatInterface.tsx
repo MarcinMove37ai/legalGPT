@@ -1143,17 +1143,31 @@ const ChatInterface: React.FC = () => {
       <div className="flex-1 flex flex-col">
         {/* Mobile header */}
         {isMobile && (
-          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between min-h-[70px]">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-blue-50 rounded-lg transition-colors flex-shrink-0"
             >
-              <Menu className="w-6 h-6 text-gray-700" />
+              <MessageSquarePlus className="w-6 h-6 text-blue-900" />
             </button>
-            <div className="text-lg font-bold text-blue-900">
-              Asystent <span className="font-light">LegalGPT.pl</span>
+
+            {/* ŚRODKOWA CZĘŚĆ NAGŁÓWKA */}
+            <div className="flex-1 px-2 text-center">
+              {messages.length === 0 ? (
+                // Wersja startowa: Tekst instrukcji przeniesiony tutaj
+                <span className="text-sm font-medium text-gray-600 leading-tight block">
+                  Wybierz akty prawne z których ma korzystać Asystent w czasie tej rozmowy:
+                </span>
+              ) : (
+                // Wersja w trakcie rozmowy: Tytuł aplikacji
+                <div className="text-lg font-bold text-blue-900">
+                  <span className="font-light"> Nowa rozmowa</span>
+                </div>
+              )}
             </div>
-            <div className="w-10" />
+
+            {/* Pusty element dla zachowania symetrii */}
+            <div className="w-10 flex-shrink-0" />
           </div>
         )}
 
@@ -1198,7 +1212,7 @@ const ChatInterface: React.FC = () => {
                   <div className="space-y-6 mb-8">
                     {/* Filtry aktów prawnych */}
                     <div className="max-w-3xl mx-auto">
-                      <p className="text-gray-600 text-sm mb-8">Wybierz akty prawne z których ma korzystać Asystent w czasie tej rozmowy:</p>
+                      <p className="hidden md:block text-gray-600 text-sm mb-8">Wybierz akty prawne z których ma korzystać Asystent w czasie tej rozmowy:</p>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
                         {/* KPK */}
                         <button
@@ -1397,7 +1411,7 @@ const ChatInterface: React.FC = () => {
                     className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[95%] md:max-w-[90%] rounded-2xl px-4 py-3 ${
+                      className={`max-w-[95%] md:max-w-[90%] rounded-2xl px-4 py-3 break-words overflow-hidden ${ // <--- DODANO break-words overflow-hidden
                         message.type === 'user'
                           ? 'bg-blue-900 text-white rounded-br-sm'
                           : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm shadow-sm'
