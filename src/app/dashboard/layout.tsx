@@ -484,7 +484,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
               <div className="flex items-center gap-2 font-['Poppins']">
                 <span className="text-sm font-medium text-gray-800">Marcin Lisiak</span>
                 <span className="text-gray-300">|</span>
-                <span className="text-sm text-gray-500">move37th.ai</span>
+                <span className="text-sm text-gray-500">legalGPT.pl</span>
               </div>
             </a>
           ) : (
@@ -773,7 +773,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     ? 'bg-gray-100 p-0 h-full'
                     : isFullWidthPage || disableMenu
                       ? 'bg-white rounded-xl shadow-sm p-0 h-full overflow-hidden border border-gray-200 hover:shadow-md'
-                      : 'bg-white rounded-xl shadow-sm p-2 min-[360px]:p-3 sm:p-4 md:p-8 h-full border border-gray-200 hover:shadow-md'
+                      : 'bg-white rounded-xl shadow-sm p-2 min-[360px]:p-3 sm:p-4 md:px-2 md:py-6 h-full border border-gray-200 hover:shadow-md'
                   }`}
                 >
                   {children}
