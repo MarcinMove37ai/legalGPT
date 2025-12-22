@@ -1,0 +1,40 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+model acts {
+  id          Int                    @id @default(autoincrement())
+  act         String
+  art_no      String?
+  par_no      String?
+  pkt_no      String?
+  text        String
+  text_clean  String?
+  token_count Int?
+  embedding   Unsupported("vector")?
+
+  @@index([act], map: "idx_acts_act")
+  @@index([act, art_no], map: "idx_acts_art_no")
+}
+
+model acts_cumulated {
+  id          Int                    @id @default(autoincrement())
+  act         String
+  art_no      String?
+  par_no      String?
+  pkt_no      String?
+  text        String
+  text_clean  String?
+  token_count Int?
+  embedding   Unsupported("vector")?
+
+  @@index([act], map: "idx_acts_cumulated_act")
+  @@index([act, art_no], map: "idx_acts_cumulated_art_no")
+}
