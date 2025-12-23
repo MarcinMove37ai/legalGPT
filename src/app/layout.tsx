@@ -10,7 +10,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "LegalGPT.pl | Asystent Prawny",
-  description: "Dashboard application",
+  description: "Czatuj z Polskimi Aktami Prawnymi",
   // ▼ DODAJ TEN FRAGMENT ▼
   icons: {
     icon: '/favicon.ico',
