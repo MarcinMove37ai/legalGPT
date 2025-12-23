@@ -23,6 +23,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  width: 100%;
 }
 
 @layer utilities {
@@ -42,14 +44,16 @@ body {
    MOBILE FIX - Naprawia problem z wysokością viewport na urządzeniach mobilnych
    ============================================================================ */
 
-/* Zapobiega scrollowaniu całej strony na mobile */
-html, body {
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
+/* Zapewnia że html i body zajmują pełną wysokość na wszystkich urządzeniach */
+html {
   height: 100%;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* Zapewnia że główny kontener Next.js zajmuje pełną wysokość */
+#__next, #root {
+  height: 100%;
+  width: 100%;
 }
 
 /* Główny kontener layoutu - używa dynamic viewport height */
@@ -62,32 +66,25 @@ html, body {
   max-height: -webkit-fill-available;
 }
 
-/* Zapobiega bounce effect na iOS */
-@supports (-webkit-touch-callout: none) {
-  body {
-    position: fixed;
-    overflow: hidden;
-    width: 100%;
-    height: 100vh;
-    height: -webkit-fill-available;
-  }
-}
-
-/* Dodatkowe zabezpieczenie dla Android */
+/* Style TYLKO dla mobile - zapobiega scrollowaniu całej strony */
 @media screen and (max-width: 768px) {
-  html {
+  html, body {
+    overflow: hidden;
     position: fixed;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
-  body {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    overscroll-behavior-y: none;
-    -webkit-overflow-scrolling: touch;
+  /* Zapobiega bounce effect na iOS */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      position: fixed;
+      overflow: hidden;
+      width: 100%;
+      height: 100vh;
+      height: -webkit-fill-available;
+    }
   }
 }

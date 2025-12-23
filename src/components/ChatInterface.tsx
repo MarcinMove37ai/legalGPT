@@ -1145,21 +1145,23 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-blue-50/30 to-white overflow-hidden">
-      {/* Sidebar - Desktop */}
-      {!isMobile && (
-        <Sidebar
-          chats={chats}
-          currentChatId={currentChatId}
-          onNewChat={handleNewChat}
-          onSelectChat={handleSelectChat}
-          onDeleteChat={handleDeleteChat}
-          isNewChatDisabled={currentChatId !== null && messages.length === 0}
-        />
+      <div className="flex flex-col md:flex-row h-full w-full bg-gradient-to-b from-blue-50/30 to-white overflow-hidden">
+        {/* Sidebar - Desktop (Kontener zapewniający stałą szerokość) */}
+        {!isMobile && (
+          <div className="hidden md:flex md:w-64 md:flex-shrink-0 h-full border-r border-gray-200">
+            <Sidebar
+              chats={chats}
+              currentChatId={currentChatId}
+              onNewChat={handleNewChat}
+              onSelectChat={handleSelectChat}
+              onDeleteChat={handleDeleteChat}
+              isNewChatDisabled={currentChatId !== null && messages.length === 0}
+            />
+          </div>
       )}
 
       {/* Główny obszar czatu */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full relative">
         {/* Mobile header */}
         {isMobile && (
           <div className="bg-white border-b border-gray-200 px-2 py-2 flex items-center justify-between">
@@ -1676,7 +1678,7 @@ const ChatInterface: React.FC = () => {
         </div>
 
         {/* Input - ZAWSZE WIDOCZNY - przyklejony nad stopką */}
-        <div className="fixed md:relative bottom-[40px] md:bottom-0 left-0 right-0 border-t border-gray-200 bg-white backdrop-blur-sm md:bg-white/80 z-20">
+        <div className="fixed md:sticky bottom-[40px] md:bottom-0 left-0 right-0 border-t border-gray-200 bg-white backdrop-blur-sm md:bg-white/80 z-20 mt-auto">
           <div className="max-w-6xl mx-auto px-2 py-2 md:px-4 md:py-3">
             <form onSubmit={handleSubmit} className="relative">
               <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-2xl shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">

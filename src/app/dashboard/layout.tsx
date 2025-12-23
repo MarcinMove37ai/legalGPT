@@ -450,9 +450,9 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
           </button>
         )}
 
-        {/* Logo na desktop - po lewej, klikalny */}
+        {/* Logo na desktop - zamiana Link na <a> wymusza przeładowanie */}
         {!isMobile && (
-          <Link
+          <a
             href="/dashboard/chat"
             className="ml-0 cursor-pointer group"
           >
@@ -461,20 +461,25 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
                 <img src="/logo.webp" alt="Logo" className="h-full w-auto object-contain" />
               </div>
             </div>
-          </Link>
+          </a>
         )}
       </div>
 
 
       {/* Prawa strona */}
       <div className="flex items-center space-x-2 md:space-x-4">
-        {/* Logo na mobile - po prawej, NIE klikalny */}
+        {/* Logo na mobile - teraz klikalne z efektem przeładowania */}
         {isMobile && isScreenSizeDetected && (
-          <div className="flex items-center">
-            <div className="h-11 w-auto bg-white rounded-lg shadow-md border border-gray-200 flex items-center justify-center px-2 py-1.5">
-              <img src="/logo.webp" alt="Logo" className="h-full w-auto object-contain" />
+          <a
+            href="/dashboard/chat"
+            className="flex items-center active:scale-95 transition-transform"
+          >
+            <div className="flex items-center">
+              <div className="h-11 w-auto bg-white rounded-lg shadow-md border border-gray-200 flex items-center justify-center px-2 py-1.5">
+                <img src="/logo.webp" alt="Logo" className="h-full w-auto object-contain" />
+              </div>
             </div>
-          </div>
+          </a>
         )}
 
         {/* Marcin Lisiak - tylko desktop */}
@@ -729,7 +734,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             >
               <Header currentLang={currentLang} langReady={langReady} />
 
-              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-hidden bg-gray-100 relative" style={{ height: 0 }}>
+              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-hidden bg-gray-100 relative">
                 {isNavigating && (
                   <div className="absolute inset-0 z-30 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-xl">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
