@@ -69,7 +69,7 @@ Każdą odpowiedź ZAKOŃCZ strukturą JSON. Musi ona zawierać źródła ORAZ s
 Format bloku JSON:
 \`\`\`json
 {
-  "summary_for_next_turn": "Jedno zdanie podsumowujące co ustalono, np: Użytkownik wie, że odwołanie wnosi się w terminie 14 dni do organu wyższego stopnia.",
+  "summary_for_next_turn": "Dwa zdania możliwie szczegółowo podsumowujące co ustalono, np: Użytkownik wie, że odwołanie wnosi się w terminie 14 dni do organu wyższego stopnia.",
   "sources": [
     { "index": 1, "id": "ID_Z_ATRYBUTU_XML", "description": "Art. X KPA" },
     { "index": 2, "id": "INNE_ID", "description": "Art. Y i Z tego samego aktu" }

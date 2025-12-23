@@ -698,7 +698,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       )}
 
       {/* Zmieniono strukturę na flex-col, aby Footer był na samym dole całej strony */}
-      <div className={`flex flex-col h-screen bg-gray-100 font-sans overflow-hidden transition-all duration-500 ${!isAuthenticated ? 'blur-sm scale-[0.99] pointer-events-none select-none' : 'blur-0 scale-100'}`}>
+      <div className={`flex flex-col h-screen bg-gray-100 font-sans overflow-hidden transition-all duration-500 ${!isAuthenticated ? 'blur-sm scale-[0.99] pointer-events-none select-none' : 'blur-0 scale-100'}`} style={{ height: '100vh', maxHeight: '100vh' }}>
 
         {/* Środkowy kontener: Menu + Treść */}
         <div className="flex-1 flex overflow-hidden relative">
@@ -729,7 +729,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             >
               <Header currentLang={currentLang} langReady={langReady} />
 
-              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-y-auto no-scrollbar bg-gray-100 relative">
+              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-hidden bg-gray-100 relative" style={{ height: 0 }}>
                 {isNavigating && (
                   <div className="absolute inset-0 z-30 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-xl">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
@@ -768,12 +768,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 )}
 
                 <div className={`
-                  transition-all duration-300 ease-out
+                  transition-all duration-300 ease-out h-full overflow-hidden
                   ${isVerySmallScreen
-                    ? 'bg-gray-100 p-0 h-full'
+                    ? 'bg-gray-100 p-0'
                     : isFullWidthPage || disableMenu
-                      ? 'bg-white rounded-xl shadow-sm p-0 h-full overflow-hidden border border-gray-200 hover:shadow-md'
-                      : 'bg-white rounded-xl shadow-sm p-2 min-[360px]:p-3 sm:p-4 md:px-2 md:py-6 h-full border border-gray-200 hover:shadow-md'
+                      ? 'bg-white rounded-xl shadow-sm p-0 border border-gray-200 hover:shadow-md'
+                      : 'bg-white rounded-xl shadow-sm p-2 min-[360px]:p-3 sm:p-4 md:px-2 md:py-6 border border-gray-200 hover:shadow-md'
                   }`}
                 >
                   {children}

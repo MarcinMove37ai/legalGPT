@@ -1145,7 +1145,7 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full bg-gradient-to-b from-blue-50/30 to-white">
+    <div className="flex h-full max-h-full bg-gradient-to-b from-blue-50/30 to-white overflow-hidden">
       {/* Sidebar - Desktop */}
       {!isMobile && (
         <Sidebar
@@ -1159,7 +1159,7 @@ const ChatInterface: React.FC = () => {
       )}
 
       {/* Główny obszar czatu */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Mobile header */}
         {isMobile && (
           <div className="bg-white border-b border-gray-200 px-2 py-2 flex items-center justify-between">
@@ -1222,7 +1222,7 @@ const ChatInterface: React.FC = () => {
         )}
 
         {/* Obszar wiadomości */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden min-h-0">
           <ScrollArea className="h-full" ref={scrollAreaRef}>
             <div className="max-w-6xl mx-auto px-2 py-3 pb-24 md:pb-3 space-y-3">
               {messages.length === 0 ? (
