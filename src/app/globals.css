@@ -1,3 +1,4 @@
+/* globals.css */
 @import "tailwindcss";
 
 :root {
@@ -44,13 +45,11 @@ body {
    MOBILE FIX - Naprawia problem z wysokością viewport na urządzeniach mobilnych
    ============================================================================ */
 
-/* Zapewnia że html i body zajmują pełną wysokość na wszystkich urządzeniach */
 html {
   height: 100%;
   width: 100%;
 }
 
-/* Zapewnia że główny kontener Next.js zajmuje pełną wysokość */
 #__next, #root {
   height: 100%;
   width: 100%;
@@ -58,33 +57,32 @@ html {
 
 /* Główny kontener layoutu - używa dynamic viewport height */
 .dashboard-layout-container {
-  height: 100dvh; /* Dynamic Viewport Height - uwzględnia toolbar przeglądarki */
-  height: -webkit-fill-available; /* Fallback dla Safari */
+  height: 100dvh;
   min-height: 100dvh;
-  min-height: -webkit-fill-available;
   max-height: 100dvh;
-  max-height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Trzyma strukturę w ryzach */
 }
 
-/* Style TYLKO dla mobile - zapobiega scrollowaniu całej strony */
+/* Style TYLKO dla mobile - zapobiega scrollowaniu całej strony, ale pozwala na touch events */
 @media screen and (max-width: 768px) {
   html, body {
+    /* CHIRURGICZNA NAPRAWA: Usunięto position: fixed, który blokował scrolla na iOS */
     overflow: hidden;
-    position: fixed;
+    position: relative;
     width: 100%;
     height: 100%;
     overscroll-behavior: none;
-    -webkit-overflow-scrolling: touch;
   }
 
-  /* Zapobiega bounce effect na iOS */
+  /* Specyficzne poprawki dla iOS Safari */
   @supports (-webkit-touch-callout: none) {
     body {
-      position: fixed;
+      /* Używamy dvh zamiast vh, aby uniknąć problemów z paskami przeglądarki */
+      height: 100dvh;
       overflow: hidden;
-      width: 100%;
-      height: 100vh;
-      height: -webkit-fill-available;
+      position: relative;
     }
   }
 }

@@ -483,7 +483,8 @@ const SourceCard: React.FC<SourceCardProps> = ({ source, onClose }) => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto bg-gray-50" style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: '#cbd5e1 #f1f5f9'
+          scrollbarColor: '#cbd5e1 #f1f5f9',
+          WebkitOverflowScrolling: 'touch' // Dodaj tę linię
         }}>
           {isLoading ? (
             <div className="flex flex-col items-center justify-center p-12 w-full min-h-full">
@@ -1225,7 +1226,11 @@ const ChatInterface: React.FC = () => {
 
         {/* Obszar wiadomości */}
         <div className="flex-1 overflow-hidden min-h-0">
-          <ScrollArea className="h-full" ref={scrollAreaRef}>
+          <ScrollArea
+            className="h-full no-scrollbar"
+            ref={scrollAreaRef}
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
             <div className="max-w-6xl mx-auto px-2 py-3 pb-24 md:pb-3 space-y-3">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center px-2">

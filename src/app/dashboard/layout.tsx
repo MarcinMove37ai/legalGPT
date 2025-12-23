@@ -719,7 +719,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
             {/* Kontener treści z marginesem dynamicznym */}
             <div
-              // 1. Dodajemy klasy: pt-16 (64px dla mobile) i md:pt-25 (100px dla desktop, pasuje do h-25)
               className={`flex-1 flex flex-col transition-all duration-300 ease-out pt-16 md:pt-25 ${
               isMobile || disableMenu || isEzdPage || !isScreenSizeDetected
                 ? 'ml-0'
@@ -728,13 +727,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   : 'ml-20'
             }`}
               style={{
-                // 2. Usuwamy paddingTop stąd
                 height: '100%'
               }}
             >
               <Header currentLang={currentLang} langReady={langReady} />
 
-              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 overflow-hidden bg-gray-100 relative">
+              {/* ZMIANA: Usunięto overflow-hidden, dodano no-scrollbar dla mobile */}
+              <main className="flex-1 px-1 min-[360px]:px-1.5 sm:px-2 pb-4 pt-1.5 bg-gray-100 relative overflow-y-auto md:overflow-hidden no-scrollbar">
                 {isNavigating && (
                   <div className="absolute inset-0 z-30 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-xl">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
@@ -773,17 +772,18 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 )}
 
                 <div className={`
-                  transition-all duration-300 ease-out h-full overflow-hidden
-                  ${isVerySmallScreen
-                    ? 'bg-gray-100 p-0'
-                    : isFullWidthPage || disableMenu
-                      ? 'bg-white rounded-xl shadow-sm p-0 border border-gray-200 hover:shadow-md'
-                      : 'bg-white rounded-xl shadow-sm p-2 min-[360px]:p-3 sm:p-4 md:px-2 md:py-6 border border-gray-200 hover:shadow-md'
-                  }`}
-                >
-                  {children}
-                </div>
-              </main>
+                    transition-all duration-300 ease-out h-full
+                    ${isVerySmallScreen
+                      ? 'bg-gray-100 p-0'
+                      : isFullWidthPage || disableMenu
+                        ? 'bg-white rounded-xl shadow-sm p-0 border border-gray-200'
+                        : 'bg-white rounded-xl shadow-sm p-2 sm:p-4 md:px-2 md:py-6 border border-gray-200'
+                    }`}
+                    style={{ overflow: 'visible' }} // Wymuszamy widoczność, aby ScrollArea z ChatInterface przejął kontrolę
+                  >
+                    {children}
+                  </div>
+                </main>
             </div>
         </div>
 
