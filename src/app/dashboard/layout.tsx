@@ -439,13 +439,13 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-25 bg-white shadow-sm border-b border-gray-200 z-50 flex items-center justify-between px-4 md:px-6" style={{ transition: 'padding 0.3s ease-out' }}>
+    <header className="fixed top-0 left-0 right-0 bg-white shadow-sm border-b border-gray-200 z-50 flex items-center justify-between h-16 md:h-25 px-2 md:px-6 py-2 md:py-0" style={{ transition: 'padding 0.3s ease-out' }}>
       {/* Lewa strona - tylko hamburger na mobile */}
       <div className="flex items-center flex-shrink-0">
         {isMobile && isScreenSizeDetected && (
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2.5 hover:bg-gray-100 rounded-xl transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95">
-            <div className="relative w-6 h-6">
-              {isMobileMenuOpen ? (isClient && <X className="h-6 w-6 text-gray-600 transition-transform duration-200 rotate-0 hover:rotate-90" />) : (isClient && <Menu className="h-6 w-6 text-gray-600 transition-transform duration-200" />)}
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-1.5 md:p-2.5 hover:bg-gray-100 rounded-lg md:rounded-xl transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95">
+            <div className="relative w-5 h-5 md:w-6 md:h-6">
+              {isMobileMenuOpen ? (isClient && <X className="h-5 w-5 md:h-6 md:w-6 text-gray-600 transition-transform duration-200 rotate-0 hover:rotate-90" />) : (isClient && <Menu className="h-5 w-5 md:h-6 md:w-6 text-gray-600 transition-transform duration-200" />)}
             </div>
           </button>
         )}
@@ -467,11 +467,11 @@ const Header: React.FC<HeaderProps> = ({ currentLang, langReady }) => {
 
 
       {/* Prawa strona */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2 md:space-x-4">
         {/* Logo na mobile - po prawej, NIE klikalny */}
         {isMobile && isScreenSizeDetected && (
           <div className="flex items-center">
-            <div className="h-14 w-auto bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center px-3 py-2">
+            <div className="h-11 w-auto bg-white rounded-lg shadow-md border border-gray-200 flex items-center justify-center px-2 py-1.5">
               <img src="/logo.webp" alt="Logo" className="h-full w-auto object-contain" />
             </div>
           </div>
@@ -506,7 +506,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-white border-t border-gray-200 z-50 shrink-0 text-xs
       /* Mobile: Siatka 2x2 z paddingiem */
-      grid grid-cols-2 gap-x-2 p-4
+      flex items-center justify-between p-3
       /* Desktop: Flexbox w jednej linii */
       md:flex md:items-center md:justify-between md:px-6 md:py-3">
 
@@ -515,7 +515,7 @@ const Footer: React.FC = () => {
           Desktop: Lewa strona (Order 1)
       */}
       <div className="text-gray-400 leading-tight order-1 text-left md:order-1">
-        &copy; 2026{' '}
+        <span className="hidden md:inline">&copy; 2026</span>{' '}
         <a
           href="https://rejestr.io/krs/1044483/aquatrek-solutions"
           target="_blank"
@@ -535,8 +535,7 @@ const Footer: React.FC = () => {
         v.4 beta/MVP/22dec
       </span>
 
-      {/* 3. Linia podziału (TYLKO MOBILE) */}
-      <div className="col-span-2 border-t border-gray-100 my-2 order-3 md:hidden"></div>
+      {/* 3. Linia podziału - usunięta, nie potrzebna gdy linki ukryte */}
 
       {/* 4. Polityka Prywatności
           Mobile: Lewy Dół (Order 4)
@@ -544,7 +543,7 @@ const Footer: React.FC = () => {
       */}
       <a
         href="#"
-        className="text-gray-500 hover:text-blue-600 transition-colors font-medium order-4 text-left md:order-2 md:ml-auto"
+        className="hidden md:block text-gray-500 hover:text-blue-600 transition-colors font-medium order-4 text-left md:order-2 md:ml-auto"
       >
         Polityka Prywatności
       </a>
@@ -555,7 +554,7 @@ const Footer: React.FC = () => {
       */}
       <a
         href="#"
-        className="text-gray-500 hover:text-blue-600 transition-colors font-medium order-5 text-right md:order-3 md:ml-4 md:text-left"
+        className="hidden md:block text-gray-500 hover:text-blue-600 transition-colors font-medium order-5 text-right md:order-3 md:ml-4 md:text-left"
       >
         Regulamin
       </a>
@@ -715,16 +714,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
             {/* Kontener treści z marginesem dynamicznym */}
             <div
-              className={`flex-1 flex flex-col transition-all duration-300 ease-out ${
+              // 1. Dodajemy klasy: pt-16 (64px dla mobile) i md:pt-25 (100px dla desktop, pasuje do h-25)
+              className={`flex-1 flex flex-col transition-all duration-300 ease-out pt-16 md:pt-25 ${
               isMobile || disableMenu || isEzdPage || !isScreenSizeDetected
                 ? 'ml-0'
                 : hoveredSidebar
-                  ? 'ml-80' // Zsynchronizowane z szerokością Sidebar (w-80)
+                  ? 'ml-80'
                   : 'ml-20'
             }`}
               style={{
-                paddingTop: '100px',
-                height: '100%' // Wypełnia dostępną przestrzeń flexa
+                // 2. Usuwamy paddingTop stąd
+                height: '100%'
               }}
             >
               <Header currentLang={currentLang} langReady={langReady} />

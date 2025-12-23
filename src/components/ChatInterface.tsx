@@ -166,7 +166,7 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children
         className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all duration-200 group border border-gray-200 cursor-pointer"
       >
         <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900">{title}</span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2">
           <span className="text-xs text-gray-500 group-hover:text-gray-700">
             {isOpen ? 'Zwiń' : 'Rozwiń'}
           </span>
@@ -581,6 +581,7 @@ interface SidebarProps {
   onNewChat: () => void;
   onSelectChat: (chatId: number) => void;
   onDeleteChat: (chatId: number) => void;
+  isNewChatDisabled: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -588,7 +589,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   currentChatId,
   onNewChat,
   onSelectChat,
-  onDeleteChat
+  onDeleteChat,
+  isNewChatDisabled
 }) => {
   return (
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-full">
@@ -596,7 +598,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-b border-gray-200">
         <button
           onClick={onNewChat}
-          className="w-full p-3 bg-blue-900 text-white rounded-lg flex items-center justify-between hover:bg-blue-800 transition-colors"
+          disabled={isNewChatDisabled}
+          className={`w-full p-3 rounded-lg flex items-center justify-between transition-colors ${
+            isNewChatDisabled
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-900 text-white hover:bg-blue-800 cursor-pointer'
+          }`}
         >
           <span>Nowy czat</span>
           <MessageSquarePlus className="w-5 h-5" />
@@ -630,7 +637,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     e.stopPropagation();
                     onDeleteChat(chat.id);
                   }}
-                  className="flex-shrink-0 opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 rounded transition-all"
+                  className="flex-shrink-0 opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 cursor-pointer rounded transition-all"
                 >
                   <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500" />
                 </button>
@@ -655,6 +662,7 @@ interface MobileMenuProps {
   onNewChat: () => void;
   onSelectChat: (chatId: number) => void;
   onDeleteChat: (chatId: number) => void;
+  isNewChatDisabled: boolean;
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
@@ -664,7 +672,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   currentChatId,
   onNewChat,
   onSelectChat,
-  onDeleteChat
+  onDeleteChat,
+  isNewChatDisabled,
 }) => {
   if (!isOpen) return null;
 
@@ -690,7 +699,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
               onNewChat();
               onClose();
             }}
-            className="w-full p-3 bg-blue-900 text-white rounded-xl flex items-center justify-between hover:bg-blue-800 transition-colors"
+            disabled={isNewChatDisabled}
+            className={`w-full p-3 rounded-xl flex items-center justify-between transition-colors ${
+              isNewChatDisabled
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-blue-900 text-white hover:bg-blue-800 cursor-pointer'
+            }`}
           >
             <span>Nowy czat</span>
             <MessageSquarePlus className="w-5 h-5" />
@@ -703,19 +717,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             {chats.map((chat) => (
               <div
                 key={chat.id}
-                className={`relative p-3 rounded-xl border transition-colors ${
+                onClick={() => {
+                  onSelectChat(chat.id);
+                  onClose();
+                }}
+                className={`relative p-3 rounded-xl border transition-colors cursor-pointer hover:bg-gray-50 ${
                   currentChatId === chat.id
                     ? 'bg-blue-50 border-blue-200'
                     : 'bg-white border-gray-200'
                 }`}
               >
-                <div
-                  onClick={() => {
-                    onSelectChat(chat.id);
-                    onClose();
-                  }}
-                  className="cursor-pointer pr-10"
-                >
+                <div className="pr-10">
                   <p className="text-sm font-medium text-gray-800 break-words line-clamp-2">
                     {chat.title}
                   </p>
@@ -724,11 +736,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                   </p>
                 </div>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     onDeleteChat(chat.id);
                     onClose();
                   }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-red-50 cursor-pointer rounded-lg transition-colors flex-shrink-0"
                 >
                   <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500" />
                 </button>
@@ -808,6 +821,11 @@ const ChatInterface: React.FC = () => {
 
   // Nowy czat
   const handleNewChat = () => {
+    // Blokada: nie można utworzyć nowego czatu jeśli aktualny jest pusty
+    if (currentChatId && messages.length === 0) {
+      return; // Ignoruj próbę utworzenia nowego czatu
+    }
+
     const newChat: Chat = {
       id: Date.now(),
       title: 'Nowy czat',
@@ -1136,6 +1154,7 @@ const ChatInterface: React.FC = () => {
           onNewChat={handleNewChat}
           onSelectChat={handleSelectChat}
           onDeleteChat={handleDeleteChat}
+          isNewChatDisabled={currentChatId !== null && messages.length === 0}
         />
       )}
 
@@ -1143,37 +1162,37 @@ const ChatInterface: React.FC = () => {
       <div className="flex-1 flex flex-col">
         {/* Mobile header */}
         {isMobile && (
-          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between min-h-[70px]">
+          <div className="bg-white border-b border-gray-200 px-2 py-2 flex items-center justify-between">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 hover:bg-blue-50 rounded-lg transition-colors flex-shrink-0"
+              className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors flex-shrink-0"
             >
-              <MessageSquarePlus className="w-6 h-6 text-blue-900" />
+              <MessageSquarePlus className="w-5 h-5 text-blue-900" />
             </button>
 
             {/* ŚRODKOWA CZĘŚĆ NAGŁÓWKA */}
             <div className="flex-1 px-2 text-center">
               {messages.length === 0 ? (
                 // Wersja startowa: Tekst instrukcji przeniesiony tutaj
-                <span className="text-sm font-medium text-gray-600 leading-tight block">
+                <span className="text-xs font-medium text-gray-600 leading-tight block">
                   Wybierz akty prawne z których ma korzystać Asystent w czasie tej rozmowy:
                 </span>
               ) : (
                 // Wersja w trakcie rozmowy: Tytuł aplikacji
-                <div className="text-lg font-bold text-blue-900">
-                  <span className="font-light"> Nowa rozmowa</span>
+                <div className="text-sm font-semibold text-blue-900">
+                  <span className="font-light"> Legal Chat</span>
                 </div>
               )}
             </div>
 
             {/* Pusty element dla zachowania symetrii */}
-            <div className="w-10 flex-shrink-0" />
+            <div className="w-8 flex-shrink-0" />
           </div>
         )}
 
         {/* Banner z aktywnymi aktami prawnymi - pokazuje się tylko gdy są wiadomości */}
         {messages.length > 0 && (
-          <div className="bg-white border-b border-gray-200 px-4 py-2.5 sticky top-0 z-10">
+          <div className="bg-white border-b border-gray-200 px-2 py-1.5 sticky top-0 z-10">
             <div className="max-w-6xl mx-auto flex items-center gap-2 flex-wrap">
               <span className="text-xs font-medium text-gray-600">
                 <span className="hidden md:inline">Aktywne Akty Prawne:</span>
@@ -1205,39 +1224,39 @@ const ChatInterface: React.FC = () => {
         {/* Obszar wiadomości */}
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-full" ref={scrollAreaRef}>
-            <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+            <div className="max-w-6xl mx-auto px-2 py-3 pb-24 md:pb-3 space-y-3">
               {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                <div className="flex flex-col items-center justify-center h-full text-center px-2">
                   {/* Logo i opis */}
-                  <div className="space-y-6 mb-8">
+                  <div className="space-y-3 mb-4">
                     {/* Filtry aktów prawnych */}
                     <div className="max-w-3xl mx-auto">
                       <p className="hidden md:block text-gray-600 text-sm mb-8">Wybierz akty prawne z których ma korzystać Asystent w czasie tej rozmowy:</p>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 md:gap-2">
                         {/* KPK */}
                         <button
                           onClick={() => setSelectedActs(prev => ({ ...prev, KPK: !prev.KPK }))}
-                          className={`px-4 py-2.5 rounded-lg border transition-all ${
+                          className={`px-2 py-1.5 md:px-3 md:py-2 rounded-lg border transition-all ${
                             selectedActs.KPK
                               ? 'border-blue-400 bg-blue-50/50'
                               : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-2.5">
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
                               selectedActs.KPK
                                 ? 'border-blue-500 bg-blue-500'
                                 : 'border-gray-300 bg-white'
                             }`}>
                               {selectedActs.KPK && (
-                                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               )}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-gray-800">KPK</div>
-                              <div className="text-xs text-gray-500 truncate">Postępowanie Karne</div>
+                              <div className="font-semibold text-xs md:text-sm text-gray-800">KPK</div>
+                              <div className="text-[10px] md:text-xs text-gray-500 truncate">Postępowanie Karne</div>
                             </div>
                           </div>
                         </button>
@@ -1245,27 +1264,27 @@ const ChatInterface: React.FC = () => {
                         {/* KPA */}
                         <button
                           onClick={() => setSelectedActs(prev => ({ ...prev, KPA: !prev.KPA }))}
-                          className={`px-4 py-2.5 rounded-lg border transition-all ${
+                          className={`px-2 py-1.5 md:px-3 md:py-2 rounded-lg border transition-all ${
                             selectedActs.KPA
                               ? 'border-blue-400 bg-blue-50/50'
                               : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-2.5">
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
                               selectedActs.KPA
                                 ? 'border-blue-500 bg-blue-500'
                                 : 'border-gray-300 bg-white'
                             }`}>
                               {selectedActs.KPA && (
-                                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               )}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-gray-800">KPA</div>
-                              <div className="text-xs text-gray-500 truncate">Postępowanie Administracyjne</div>
+                              <div className="font-semibold text-xs md:text-sm text-gray-800">KPA</div>
+                              <div className="text-[10px] md:text-xs text-gray-500 truncate">Postępowanie Administracyjne</div>
                             </div>
                           </div>
                         </button>
@@ -1273,27 +1292,27 @@ const ChatInterface: React.FC = () => {
                         {/* KPC */}
                         <button
                           onClick={() => setSelectedActs(prev => ({ ...prev, KPC: !prev.KPC }))}
-                          className={`px-4 py-2.5 rounded-lg border transition-all ${
+                          className={`px-2 py-1.5 md:px-3 md:py-2 rounded-lg border transition-all ${
                             selectedActs.KPC
                               ? 'border-blue-400 bg-blue-50/50'
                               : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-2.5">
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
                               selectedActs.KPC
                                 ? 'border-blue-500 bg-blue-500'
                                 : 'border-gray-300 bg-white'
                             }`}>
                               {selectedActs.KPC && (
-                                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               )}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-gray-800">KPC</div>
-                              <div className="text-xs text-gray-500 truncate">Postępowanie Cywilne</div>
+                              <div className="font-semibold text-xs md:text-sm text-gray-800">KPC</div>
+                              <div className="text-[10px] md:text-xs text-gray-500 truncate">Postępowanie Cywilne</div>
                             </div>
                           </div>
                         </button>
@@ -1301,27 +1320,27 @@ const ChatInterface: React.FC = () => {
                         {/* KPE */}
                         <button
                           onClick={() => setSelectedActs(prev => ({ ...prev, KPE: !prev.KPE }))}
-                          className={`px-4 py-2.5 rounded-lg border transition-all ${
+                          className={`px-2 py-1.5 md:px-3 md:py-2 rounded-lg border transition-all ${
                             selectedActs.KPE
                               ? 'border-blue-400 bg-blue-50/50'
                               : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-2.5">
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
                               selectedActs.KPE
                                 ? 'border-blue-500 bg-blue-500'
                                 : 'border-gray-300 bg-white'
                             }`}>
                               {selectedActs.KPE && (
-                                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               )}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-gray-800">KPE</div>
-                              <div className="text-xs text-gray-500 truncate">Postępowanie Egzekucyjne</div>
+                              <div className="font-semibold text-xs md:text-sm text-gray-800">KPE</div>
+                              <div className="text-[10px] md:text-xs text-gray-500 truncate">Postępowanie Egzekucyjne</div>
                             </div>
                           </div>
                         </button>
@@ -1329,27 +1348,27 @@ const ChatInterface: React.FC = () => {
                         {/* SUS */}
                         <button
                           onClick={() => setSelectedActs(prev => ({ ...prev, SUS: !prev.SUS }))}
-                          className={`px-4 py-2.5 rounded-lg border transition-all ${
+                          className={`px-2 py-1.5 md:px-3 md:py-2 rounded-lg border transition-all ${
                             selectedActs.SUS
                               ? 'border-blue-400 bg-blue-50/50'
                               : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-2.5">
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
                               selectedActs.SUS
                                 ? 'border-blue-500 bg-blue-500'
                                 : 'border-gray-300 bg-white'
                             }`}>
                               {selectedActs.SUS && (
-                                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                 </svg>
                               )}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-gray-800">SUS</div>
-                              <div className="text-xs text-gray-500 truncate">System Ubezpieczeń Społ.</div>
+                              <div className="font-semibold text-xs md:text-sm text-gray-800">SUS</div>
+                              <div className="text-[10px] md:text-xs text-gray-500 truncate">System Ubezpieczeń Społ.</div>
                             </div>
                           </div>
                         </button>
@@ -1357,13 +1376,13 @@ const ChatInterface: React.FC = () => {
                         {/* KK - Wkrótce */}
                         <button
                           disabled
-                          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50/50 opacity-50 cursor-not-allowed"
+                          className="px-2 py-1.5 md:px-3 md:py-2 rounded-lg border border-gray-200 bg-gray-50/50 opacity-50 cursor-not-allowed"
                         >
-                          <div className="flex items-center gap-2.5">
-                            <div className="w-4 h-4 rounded border border-gray-300 bg-white flex-shrink-0"></div>
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className="w-3.5 h-3.5 rounded border border-gray-300 bg-white flex-shrink-0"></div>
                             <div className="text-left flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-gray-500">KK</div>
-                              <div className="text-xs text-gray-400 truncate">Kodeks Karny • Wkrótce</div>
+                              <div className="font-semibold text-xs md:text-sm text-gray-500">KK</div>
+                              <div className="text-[10px] md:text-xs text-gray-400 truncate">Kodeks Karny • Wkrótce</div>
                             </div>
                           </div>
                         </button>
@@ -1371,38 +1390,6 @@ const ChatInterface: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Input w centrum ekranu */}
-                  <div className="w-full max-w-2xl">
-                    <form onSubmit={handleSubmit} className="relative">
-                      <div className="flex items-end gap-2 bg-white border border-gray-300 rounded-2xl shadow-lg focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
-                        <textarea
-                          ref={textareaRef}
-                          value={input}
-                          onChange={(e) => setInput(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          placeholder="Zadaj pytanie..."
-                          className="flex-1 px-4 py-3 bg-transparent border-0 outline-none resize-none max-h-[200px] min-h-[52px] text-gray-900 placeholder:text-gray-400"
-                          rows={1}
-                          disabled={isLoading}
-                          autoFocus
-                        />
-                        <button
-                          type="submit"
-                          disabled={!input.trim() || isLoading}
-                          className={`m-2 p-2.5 rounded-xl transition-all ${
-                            input.trim() && !isLoading
-                              ? 'bg-blue-900 text-white hover:bg-blue-800 shadow-sm'
-                              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                          }`}
-                        >
-                          <Send className="w-5 h-5" />
-                        </button>
-                      </div>
-                      <div className="text-xs text-gray-500 mt-2 text-center">
-                        Naciśnij Enter aby wysłać, Shift+Enter dla nowej linii
-                      </div>
-                    </form>
-                  </div>
                 </div>
               ) : (
                 messages.map((message) => (
@@ -1688,41 +1675,40 @@ const ChatInterface: React.FC = () => {
           </ScrollArea>
         </div>
 
-        {/* Input - pokazuje się tylko gdy są wiadomości */}
-        {messages.length > 0 && (
-        <div className="border-t border-gray-200 bg-white/80 backdrop-blur-sm">
-          <div className="max-w-6xl mx-auto px-4 py-4">
+        {/* Input - ZAWSZE WIDOCZNY - przyklejony nad stopką */}
+        <div className="fixed md:relative bottom-[40px] md:bottom-0 left-0 right-0 border-t border-gray-200 bg-white backdrop-blur-sm md:bg-white/80 z-20">
+          <div className="max-w-6xl mx-auto px-2 py-2 md:px-4 md:py-3">
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-end gap-2 bg-white border border-gray-300 rounded-2xl shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-2xl shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
                 <textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Kontynuuj rozmowę..."
-                  className="flex-1 px-4 py-3 bg-transparent border-0 outline-none resize-none max-h-[200px] min-h-[52px] text-gray-900 placeholder:text-gray-400"
+                  placeholder={messages.length === 0 ? "Rozpocznij rozmowę..." : "Kontynuuj rozmowę..."}
+                  className="flex-1 px-3 py-[13px] md:py-[15px] bg-transparent border-0 outline-none resize-none max-h-[200px] min-h-[44px] md:min-h-[52px] text-gray-900 placeholder:text-gray-400 text-sm "
                   rows={1}
                   disabled={isLoading}
+                  autoFocus
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className={`m-2 p-2.5 rounded-xl transition-all ${
+                  className={`m-1.5 md:m-2 p-2 rounded-xl transition-all ${
                     input.trim() && !isLoading
                       ? 'bg-blue-900 text-white hover:bg-blue-800 shadow-sm'
                       : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   }`}
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
-              <div className="text-xs text-gray-500 mt-2 text-center">
+              <div className="text-xs text-gray-500 mt-1 text-center hidden md:block">
                 Naciśnij Enter aby wysłać, Shift+Enter dla nowej linii
               </div>
             </form>
           </div>
         </div>
-        )}
       </div>
 
       {/* Mobile Menu */}
@@ -1734,6 +1720,7 @@ const ChatInterface: React.FC = () => {
         onNewChat={handleNewChat}
         onSelectChat={handleSelectChat}
         onDeleteChat={handleDeleteChat}
+        isNewChatDisabled={currentChatId !== null && messages.length === 0}
       />
 
       {/* Source Card Popup */}
