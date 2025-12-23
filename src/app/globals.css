@@ -37,3 +37,57 @@ body {
     scrollbar-width: none;  /* Firefox */
   }
 }
+
+/* ============================================================================
+   MOBILE FIX - Naprawia problem z wysokością viewport na urządzeniach mobilnych
+   ============================================================================ */
+
+/* Zapobiega scrollowaniu całej strony na mobile */
+html, body {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Główny kontener layoutu - używa dynamic viewport height */
+.dashboard-layout-container {
+  height: 100dvh; /* Dynamic Viewport Height - uwzględnia toolbar przeglądarki */
+  height: -webkit-fill-available; /* Fallback dla Safari */
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  max-height: 100dvh;
+  max-height: -webkit-fill-available;
+}
+
+/* Zapobiega bounce effect na iOS */
+@supports (-webkit-touch-callout: none) {
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+}
+
+/* Dodatkowe zabezpieczenie dla Android */
+@media screen and (max-width: 768px) {
+  html {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+}

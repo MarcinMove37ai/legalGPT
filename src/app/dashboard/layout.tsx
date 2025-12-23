@@ -698,7 +698,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       )}
 
       {/* Zmieniono strukturę na flex-col, aby Footer był na samym dole całej strony */}
-      <div className={`flex flex-col h-screen bg-gray-100 font-sans overflow-hidden transition-all duration-500 ${!isAuthenticated ? 'blur-sm scale-[0.99] pointer-events-none select-none' : 'blur-0 scale-100'}`} style={{ height: '100vh', maxHeight: '100vh' }}>
+      <div className={`dashboard-layout-container flex flex-col h-screen bg-gray-100 font-sans overflow-hidden overscroll-none transition-all duration-500 ${!isAuthenticated ? 'blur-sm scale-[0.99] pointer-events-none select-none' : 'blur-0 scale-100'}`}>
 
         {/* Środkowy kontener: Menu + Treść */}
         <div className="flex-1 flex overflow-hidden relative">

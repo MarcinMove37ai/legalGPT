@@ -1145,7 +1145,7 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full max-h-full bg-gradient-to-b from-blue-50/30 to-white overflow-hidden">
+    <div className="flex flex-col h-full bg-gradient-to-b from-blue-50/30 to-white overflow-hidden">
       {/* Sidebar - Desktop */}
       {!isMobile && (
         <Sidebar
