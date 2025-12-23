@@ -737,7 +737,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 )}
 
                 {!isFullWidthPage && !disableMenu && (
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-2 pt-2 px-1 transition-all duration-300">
+                  <div className="hidden md:flex flex-col md:flex-row items-start md:items-center justify-between mb-2 pt-2 px-1 transition-all duration-300">
 
                     {/* LEWA STRONA: Minimalistyczna etykieta */}
                     <div className="flex items-center">
