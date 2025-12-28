@@ -21,7 +21,8 @@ import {
   Gavel,
   MessageSquare, // Dymek
   EyeOff, // Przekreślone oko
-  ArrowRight
+  ArrowRight,
+  Upload // Przesyłanie plików offline
 } from 'lucide-react';
 import { getDecisionStatsAction } from '@/app/actions';
 
@@ -94,32 +95,54 @@ interface DecisionStats {
   closed: number;
 }
 
-const getMenuItems = (lang: 'pl', stats?: DecisionStats): MenuItem[] => [
+// Funkcja sprawdzająca czy aplikacja działa na localhost
+const isLocalhost = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  const hostname = window.location.hostname;
+  return hostname === 'localhost' ||
+         hostname === '127.0.0.1' ||
+         hostname === '[::1]' ||
+         hostname.startsWith('192.168.') ||
+         hostname.startsWith('10.') ||
+         hostname.endsWith('.local');
+};
+
+const getMenuItems = (lang: 'pl', stats?: DecisionStats): MenuItem[] => {
+  const isLocal = isLocalhost();
+
+  return [
   {
     IconComponent: MessageSquare, // Dymek wiadomości
     label: 'Legal Chat',
     path: '/dashboard/chat',
-    disabled: false // Aktywne
+    disabled: false // Zawsze aktywne
+  },
+  {
+    IconComponent: Upload, // Przesyłanie offline
+    label: 'Upload Files Offline',
+    path: '/dashboard/upload',
+    disabled: !isLocal // Aktywne tylko na localhost
   },
   {
     IconComponent: EyeOff, // Przekreślone oko
     label: 'Anonimizacja dokumentów',
     path: '/dashboard/ocr',
-    disabled: true // Zablokowane
+    disabled: !isLocal // Aktywne tylko na localhost
   },
   {
     IconComponent: Scale, // Waga
     label: 'Baza orzeczeń sądowych',
     path: '/dashboard/judgments',
-    disabled: true // Zablokowane
+    disabled: true // Zawsze zablokowane
   },
   {
     IconComponent: FileText, // Kartka
     label: 'Dokumenty kancelarii',
-    path: '/dashboard/documents', // Unikalna ścieżka (naprawa błędu kluczy)
-    disabled: true // Zablokowane
+    path: '/dashboard/documents',
+    disabled: true // Zawsze zablokowane
   }
 ];
+};
 
 const getCurrentPageLabel = (path: string | null, lang: 'pl' = 'pl') => {
   if (!path) return 'Dashboard';
